@@ -25,7 +25,12 @@ dependencies:
     sdk: flutter
   
   url_launcher: ^5.7.5
+  
+  sqflite: 
 
+  path:
+
+  path_provider:
 
   http:
 

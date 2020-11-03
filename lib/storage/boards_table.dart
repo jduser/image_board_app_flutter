@@ -22,7 +22,7 @@ void insertBoardTable() async {
     map['prevSymbol'] = prevSymbol;
     prevSymbol = map['symbol'];
 
-    dbase.insert('boards', map);
+    await dbase.insert('boards', map);
   }
 
   //print(listMap[1]);
@@ -33,10 +33,7 @@ Future<List<BoardData>> getBoardDataList() async {
   List<Map<String, dynamic>> maps = await dbase.query('boards');
   List<BoardData> boardDataList = new List<BoardData>();
   for (var map in maps) {
-    BoardData boardData = new BoardData();
-    boardData.name = map['name'];
-    boardData.prevSymbol = map['prevSymbol'];
-    boardData.symbol = map['symbol'];
+    BoardData boardData = new BoardData.fromMap(map);
     boardDataList.add(boardData);
   }
   return boardDataList;
@@ -44,8 +41,26 @@ Future<List<BoardData>> getBoardDataList() async {
 
 void updateBoardTableData() {}
 
+void deleteBoardTableData() {}
+
 class BoardData {
   String name;
   String symbol;
   String prevSymbol;
+
+  Map<String, String> toMap() {
+    Map map = new Map<String, String>();
+    map['name'] = name;
+    map['symbol'] = symbol;
+    map['prevSymbol'] = prevSymbol;
+    return map;
+  }
+
+  BoardData();
+
+  BoardData.fromMap(Map map) {
+    this.name = map['name'] ?? '';
+    this.symbol = map['symbol'] ?? '';
+    this.prevSymbol = map['prevSymbol'] ?? '';
+  }
 }

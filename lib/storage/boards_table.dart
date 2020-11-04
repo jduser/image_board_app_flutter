@@ -15,7 +15,9 @@ Future<List<BoardData>> getBoardDataList() async {
   return boardDataList;
 }
 
-void updateBoardTableData() {}
+void updateBoardTableData() async {
+  List<BoardData> boardDataList = await getBoardDataList();
+}
 
 void noShowBoardTableData(String symbol) async {
   Database dbase = await db;

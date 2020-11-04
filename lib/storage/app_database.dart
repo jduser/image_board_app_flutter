@@ -19,7 +19,7 @@ void createDataBaseHandle() async {
     version: 1,
     onCreate: (db, version) {
       db.execute(
-        "CREATE TABLE boards(symbol TEXT, name TEXT, prevSymbol TEXT, nextSymbol TEXT, show INTEGER)",
+        "CREATE TABLE boards(symbol TEXT, name TEXT, prevSymbol TEXT, nextSymbol TEXT, show TEXT)",
       );
       return insertBoardTable(db);
     },

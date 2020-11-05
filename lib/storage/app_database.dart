@@ -4,29 +4,30 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:anon4_board/data/api_get_BoardList.dart';
 
-Future<Database> database;
+Database database;
 String path;
 
-void createDataBaseHandle() async {
+Future<void> createDataBaseHandle() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   var databasesPath = await getDatabasesPath();
 
   path = join(databasesPath, 'app_database.db');
 
-  database = openDatabase(
+  database = await openDatabase(
     path,
     version: 1,
-    onCreate: (db, version) {
-      db.execute(
+    onCreate: (db, version) async {
+      await db.execute(
         "CREATE TABLE boards(symbol TEXT, name TEXT, prevSymbol TEXT, nextSymbol TEXT, show TEXT)",
       );
-      return insertBoardTable(db);
+      await insertBoardTable(db);
+      return null;
     },
   );
 }
 
-void insertBoardTable(Database db) async {
+Future<void> insertBoardTable(Database db) async {
   final Future boards = getBoardsList();
   List<Map<String, String>> listMap = await boards;
 
@@ -44,7 +45,7 @@ void insertBoardTable(Database db) async {
   }
 }
 
-Future<Database> getDataBaseHandle() {
-  createDataBaseHandle();
+FutureOr<Database> getDataBaseHandle() async {
+  await createDataBaseHandle();
   return database;
 }

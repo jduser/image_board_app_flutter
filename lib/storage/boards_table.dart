@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:anon4_board/storage/app_database.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<Database> db = getDataBaseHandle();
+Database dbase = getDataBaseHandle();
 
-Future<List<BoardData>> getBoardDataList() async {
-  Database dbase = await db;
+FutureOr<List<BoardData>> getBoardDataList() async {
+  //Database dbase = await db;
 
   List<Map<String, dynamic>> maps = await dbase.query('boards');
   List<BoardData> boardDataList = new List<BoardData>();
@@ -20,19 +22,19 @@ Future<List<BoardData>> getBoardDataList() async {
 }*/
 
 void refillBoardTableData(List<BoardData> bDataList) async {
-  Database dbase = await db;
-  dbase.rawDelete('DELETE from boards');
+  //Database dbase = await db;
+  await dbase.rawDelete('DELETE from boards');
   List<Map<String, String>> maps;
   for (BoardData bd in bDataList) {
     maps.add(bd.toMap());
   }
   for (var map in maps) {
-    dbase.insert('boards', map);
+    await dbase.insert('boards', map);
   }
 }
 
 void noShowBoardTableData(String symbol) async {
-  Database dbase = await db;
+  //Database dbase = await db;
 
   await dbase.rawUpdate(
       'UPDATE boards SET show = ? WHERE symbol = ?', ["false", symbol]);

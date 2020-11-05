@@ -30,8 +30,6 @@ dependencies:
 
   path:
 
-  path_provider:
-
   http:
 
   provider:

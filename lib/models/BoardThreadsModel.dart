@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import '../data/api_board_threads.dart';
-import '../data/BoardList.dart';
-
+import 'package:anon4_board/storage/boards_table.dart';
 
 class BoardThreadsModel extends ChangeNotifier {
-
   String boardSymbol;
-  List boardList;
+  List<BoardData> boardList;
 
-  BoardThreadsModel(String symbol) {
-    this.boardSymbol = symbol;
-    this.boardList = BoardList.getList();
+  BoardThreadsModel() {
+    _setBoardList();
   }
 
-  void setBoard (String symbol) {
+  void _setBoardList() async {
+    this.boardList = await getBoardDataList();
+    this.boardSymbol = this.boardList[0].symbol;
+  }
+
+  void setBoard(String symbol) {
     this.boardSymbol = symbol;
     notifyListeners();
   }

@@ -8,6 +8,7 @@ import 'util/common_functions.dart';
 import '../screens/ThreadCommentsScreen.dart';
 import 'DisplayAttachScreen.dart';
 import 'package:anon4_board/screens/widgets/ParseComment.dart';
+import 'package:anon4_board/storage/boards_table.dart';
 
 class BoardCatalogScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldState = GlobalKey<ScaffoldState>();
@@ -15,12 +16,12 @@ class BoardCatalogScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => BoardThreadsModel('g'),
+        create: (context) => BoardThreadsModel(),
         child: Consumer<BoardThreadsModel>(builder: (context, board, child) {
           return Scaffold(
               key: scaffoldState,
               appBar: AppBar(
-                title: ShowDropDownBoardList(),
+                title: Text("testing"), //ShowDropDownBoardList(),
                 centerTitle: true,
                 actions: <Widget>[
                   /*  IconButton(icon: Icon(Icons.search),
@@ -185,12 +186,13 @@ class ShowOPComment extends StatelessWidget {
 class ShowDropDownBoardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List boardList = Provider.of<BoardThreadsModel>(context).boardList;
-    List<DropdownMenuItem<String>> menuList = new List();
+    List<BoardData> boardList =
+        Provider.of<BoardThreadsModel>(context).boardList;
+    List<DropdownMenuItem<String>> menuList = new List<DropdownMenuItem<String>>();
+    print ('THE VALUE OF BOARD LIST IS $boardList');
     for (int i = 0; i < boardList.length; i++) {
-      Map m = boardList[i];
-      String boardDesc = m['title'];
-      String bs = m['board_ln'];
+      String boardDesc = boardList[i].name;
+      String bs = boardList[i].symbol;
 
       menuList.add(DropdownMenuItem<String>(
           value: bs,

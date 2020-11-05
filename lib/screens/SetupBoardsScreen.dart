@@ -23,7 +23,7 @@ class SetupBoardsScreenState extends State<SetupBoardsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<ListTile> tileList = new List();
+    List<ListTile> tileList = new List<ListTile>();
 
     for (BoardData bd in boardList) {
       String symbol = bd.symbol;

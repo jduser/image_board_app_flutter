@@ -15,8 +15,20 @@ Future<List<BoardData>> getBoardDataList() async {
   return boardDataList;
 }
 
-void updateBoardTableData() async {
+/*void updateBoardTableData() async {
   List<BoardData> boardDataList = await getBoardDataList();
+}*/
+
+void refillBoardTableData(List<BoardData> bDataList) async {
+  Database dbase = await db;
+  dbase.rawDelete('DELETE from boards');
+  List<Map<String, String>> maps;
+  for (BoardData bd in bDataList) {
+    maps.add(bd.toMap());
+  }
+  for (var map in maps) {
+    dbase.insert('boards', map);
+  }
 }
 
 void noShowBoardTableData(String symbol) async {

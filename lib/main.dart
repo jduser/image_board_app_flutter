@@ -4,6 +4,7 @@ import 'package:anon4_board/screens/DisplayAttachScreen.dart';
 import 'package:provider/provider.dart';
 import 'screens/BoardCatalogScreen.dart';
 import 'screens/ThreadCommentsScreen.dart';
+import 'package:anon4_board/screens/SetupBoardsScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
           routes: {
             '/': (context) => BoardCatalogScreen(),
             ThreadCommentsScreen.routeName: (context) => ThreadCommentsScreen(),
-            DisplayAttachScreen.routeName: (context) => DisplayAttachScreen()
+            DisplayAttachScreen.routeName: (context) => DisplayAttachScreen(),
+            SetupBoardsScreen.routeName: (context) => SetupBoardsScreen()
           },
         ));
   }

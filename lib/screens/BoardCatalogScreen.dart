@@ -1,3 +1,4 @@
+import 'package:anon4_board/screens/SetupBoardsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +45,12 @@ class BoardCatalogScreen extends StatelessWidget {
                   DrawerHeader(
                     child: Text('this is the header'),
                   ),
-                  ListTile(title: Text('Settings')),
+                  GestureDetector(
+                    child: ListTile(title: Text('Setup Boards')),
+                    onTap: () {
+                      Navigator.pushNamed(context, SetupBoardsScreen.routeName);
+                    },
+                  ),
                   ListTile(title: Text('Bookmarks'))
                 ]),
               ),

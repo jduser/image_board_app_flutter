@@ -187,7 +187,7 @@ class ShowDropDownBoardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<BoardData>>(
-      future: Provider.of<BoardThreadsModel>(context).boardList,
+      future: Provider.of<BoardThreadsModel>(context).boardsList,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print(snapshot.error);

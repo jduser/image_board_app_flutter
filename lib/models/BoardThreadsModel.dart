@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 import '../data/api_board_threads.dart';
 import 'package:anon4_board/storage/boards_table.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:anon4_board/storage/app_database.dart';
 
 class BoardThreadsModel extends ChangeNotifier {
   String boardSymbol;
-  Future<List<BoardData>> boardList;
+  Future<List<BoardData>> boardsList = getBoardDataList();
 
   BoardThreadsModel() {
-    _setBoardList();
+    _setBoardsList();
   }
 
-  void _setBoardList() async {
+  void _setBoardsList() async {
     List<BoardData> bList;
-    Database dbase = await getDataBaseHandle();
-    this.boardList = getBoardDataList(dbase);
-    bList = await this.boardList;
-    this.boardSymbol = bList[0].symbol;
+    bList = await this.boardsList;
+    this.setBoard(bList[0].symbol);
   }
 
   void setBoard(String symbol) {

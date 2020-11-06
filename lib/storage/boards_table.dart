@@ -1,14 +1,18 @@
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
 import 'package:anon4_board/data/api_get_BoardList.dart';
+import 'package:anon4_board/storage/app_database.dart';
 
-FutureOr<List<BoardData>> getBoardDataList(Database dbase) async {
+Future<Database> db = getDataBaseHandle();
+
+Future<List<BoardData>> getBoardDataList() async {
+  Database dbase = await db;
   int count = Sqflite.firstIntValue(
       await dbase.rawQuery('SELECT COUNT(*) FROM boards'));
 
   List<BoardData> boardDataList = new List<BoardData>();
   if (count == 0) {
-    await insertBoardTable(dbase);
+    await insertBoardTable();
   }
   List<Map<String, dynamic>> maps = await dbase.query('boards');
   for (var map in maps) {
@@ -18,10 +22,10 @@ FutureOr<List<BoardData>> getBoardDataList(Database dbase) async {
   return boardDataList;
 }
 
-Future<void> insertBoardTable(Database db) async {
+Future<void> insertBoardTable() async {
+  Database dbase = await db;
   final Future<List<Map<String, dynamic>>> boards = getBoardsList();
   List<Map<String, dynamic>> listMap = await boards;
-  print("INSERTING INTO THE TABLE AGAIN");
   for (int i = 0; i < listMap.length; i++) {
     Map<String, String> map = new Map();
 
@@ -32,12 +36,13 @@ Future<void> insertBoardTable(Database db) async {
         ((i + 1) < listMap.length) ? listMap[i + 1]['board'] : '';
     map['show'] = 'true';
 
-    await db.insert('boards', map);
+    await dbase.insert('boards', map);
   }
 }
 
-Future<void> refillBoardTableData(
-    List<BoardData> bDataList, Database dbase) async {
+Future<void> refillBoardTableData(List<BoardData> bDataList) async {
+  Database dbase = await db;
+
   await dbase.rawDelete('DELETE from boards');
   List<Map<String, String>> maps;
   for (BoardData bd in bDataList) {
@@ -48,7 +53,9 @@ Future<void> refillBoardTableData(
   }
 }
 
-Future<void> noShowBoardTableData(String symbol, Database dbase) async {
+Future<void> noShowBoardTableData(String symbol) async {
+  Database dbase = await db;
+
   await dbase.rawUpdate(
       'UPDATE boards SET show = ? WHERE symbol = ?', ["false", symbol]);
 }

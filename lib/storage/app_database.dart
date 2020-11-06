@@ -24,7 +24,7 @@ Future<void> createDataBaseHandle() async {
   );
 }
 
-FutureOr<Database> getDataBaseHandle() async {
+Future<Database> getDataBaseHandle() async {
   await createDataBaseHandle();
   return database;
 }

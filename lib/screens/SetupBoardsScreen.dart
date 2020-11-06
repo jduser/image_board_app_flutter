@@ -11,6 +11,12 @@ class SetupBoardsScreen extends StatefulWidget {
 
 class SetupBoardsScreenState extends State<SetupBoardsScreen> {
   SetupBoardsModel boardModel = new SetupBoardsModel();
+  Future<List<BoardData>> boardDataList;
+
+  void initState() {
+    super.initState();
+    boardDataList = boardModel.getList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,23 +33,13 @@ class SetupBoardsScreenState extends State<SetupBoardsScreen> {
           ],
         ),
         body: FutureBuilder<List<BoardData>>(
-          future: boardModel.getList(),
+          future: boardDataList, //boardModel.getList(),
           builder: (context, snapshot) {
             List<ListTile> tileList = new List<ListTile>();
-            print("INSIDE THE BUILDER FUNCTION");
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              print("CONNECTION WAITING");
-              return Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.hasError) {
-              return Text(snapshot.error);
-            }
-            if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
               for (BoardData bd in snapshot.data) {
                 String symbol = bd.symbol;
                 String name = bd.name;
-                print("INSIDE THE FOR LOOP OF BOARDMODEL SNAPSHOT");
                 ListTile tile = new ListTile(
                   key: ValueKey(symbol),
                   title: Text("/$symbol/ - $name"),
@@ -56,8 +52,10 @@ class SetupBoardsScreenState extends State<SetupBoardsScreen> {
                   boardModel.updateList(oldIndex, newIndex);
                 },
               );
+            } else {
+              return Center(child: CircularProgressIndicator());
             }
-            return Center(child: Text("No Data"));
+            //return Center(child: Text("None of the above conditions"));
           },
         ));
   }

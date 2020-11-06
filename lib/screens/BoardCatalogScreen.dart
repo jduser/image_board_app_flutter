@@ -21,7 +21,7 @@ class BoardCatalogScreen extends StatelessWidget {
           return Scaffold(
               key: scaffoldState,
               appBar: AppBar(
-                title: Text("testing"), //ShowDropDownBoardList(),
+                title: Text('TESTING'), //ShowDropDownBoardList(),
                 centerTitle: true,
                 actions: <Widget>[
                   /*  IconButton(icon: Icon(Icons.search),
@@ -183,13 +183,15 @@ class ShowOPComment extends StatelessWidget {
   }
 }
 
+/*
 class ShowDropDownBoardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<BoardData> boardList =
         Provider.of<BoardThreadsModel>(context).boardList;
-    List<DropdownMenuItem<String>> menuList = new List<DropdownMenuItem<String>>();
-    print ('THE VALUE OF BOARD LIST IS $boardList');
+    List<DropdownMenuItem<String>> menuList =
+        new List<DropdownMenuItem<String>>();
+    print('THE VALUE OF BOARD LIST IS $boardList');
     for (int i = 0; i < boardList.length; i++) {
       String boardDesc = boardList[i].name;
       String bs = boardList[i].symbol;
@@ -218,3 +220,4 @@ class ShowDropDownBoardList extends StatelessWidget {
     });
   }
 }
+*/

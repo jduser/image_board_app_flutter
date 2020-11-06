@@ -1,31 +1,40 @@
+import 'dart:async';
+
 import 'package:anon4_board/storage/app_database.dart';
 import 'package:anon4_board/storage/boards_table.dart';
+import 'package:sqflite/sqflite.dart';
 
 class SetupBoardsModel {
   Future<List<BoardData>> boardDataList;
   List<BoardData> dataList;
+  Future<Database> db;
 
   SetupBoardsModel() {
-    createDataBaseHandle();
-    boardDataList = getBoardDataList();
+    this.db = getDataBaseHandle();
     _setDataList();
   }
 
   Future<List<BoardData>> getList() async {
-    return await boardDataList;
+    return await this.boardDataList;
   }
 
   void _setDataList() async {
-    dataList = await boardDataList;
+    Database dbase = await this.db;
+    this.boardDataList = getBoardDataList(dbase);
+    this.dataList = await this.boardDataList;
+    //print('DATALIST is $dataList');
   }
 
-  void updateList(int oldIndex, int newIndex) async {
+  Future<void> updateList(int oldIndex, int newIndex) async {
+    this.dataList = await this.boardDataList;
     BoardData tempData = dataList[oldIndex];
     dataList.removeAt(oldIndex);
     dataList.insert(newIndex, tempData);
   }
 
-  void saveToDataBase() {
-    refillBoardTableData(dataList);
+  Future<void> saveToDataBase() async {
+    Database dbase = await this.db;
+    this.dataList = await this.boardDataList;
+    await refillBoardTableData(dataList, dbase);
   }
 }

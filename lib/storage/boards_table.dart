@@ -1,28 +1,54 @@
 import 'dart:async';
-
-import 'package:anon4_board/storage/app_database.dart';
 import 'package:sqflite/sqflite.dart';
+//import 'package:anon4_board/storage/app_database.dart';
+import 'package:anon4_board/data/api_get_BoardList.dart';
 
-Database dbase = getDataBaseHandle();
+FutureOr<List<BoardData>> getBoardDataList(Database dbase) async {
+  int count = Sqflite.firstIntValue(
+      await dbase.rawQuery('SELECT COUNT(*) FROM boards'));
 
-FutureOr<List<BoardData>> getBoardDataList() async {
-  //Database dbase = await db;
+  print("ROW COUNT IS $count");
+
+  List<BoardData> boardDataList = new List<BoardData>();
+  if (count == 0) {
+    await insertBoardTable(dbase);
+  }
 
   List<Map<String, dynamic>> maps = await dbase.query('boards');
-  List<BoardData> boardDataList = new List<BoardData>();
+  print('boards TABLE $maps');
   for (var map in maps) {
     BoardData boardData = new BoardData.fromMap(map);
     boardDataList.add(boardData);
   }
+
   return boardDataList;
+}
+
+Future<void> insertBoardTable(Database db) async {
+  final Future<List<Map<String, dynamic>>> boards = getBoardsList();
+  List<Map<String, dynamic>> listMap = await boards;
+
+  for (int i = 0; i < listMap.length; i++) {
+    Map<String, String> map = new Map();
+
+    map['symbol'] = listMap[i]['board'];
+    map['name'] = listMap[i]['title'];
+    map['prevSymbol'] = (i > 0) ? listMap[i - 1]['board'] : '';
+    map['nextSymbol'] =
+        ((i + 1) < listMap.length) ? listMap[i + 1]['board'] : '';
+    map['show'] = 'true';
+
+    await db.insert('boards', map);
+  }
 }
 
 /*void updateBoardTableData() async {
   List<BoardData> boardDataList = await getBoardDataList();
 }*/
 
-void refillBoardTableData(List<BoardData> bDataList) async {
-  //Database dbase = await db;
+Future<void> refillBoardTableData(
+    List<BoardData> bDataList, Database dbase) async {
+  //dbase = await getDataBaseHandle();
   await dbase.rawDelete('DELETE from boards');
   List<Map<String, String>> maps;
   for (BoardData bd in bDataList) {
@@ -33,8 +59,8 @@ void refillBoardTableData(List<BoardData> bDataList) async {
   }
 }
 
-void noShowBoardTableData(String symbol) async {
-  //Database dbase = await db;
+Future<void> noShowBoardTableData(String symbol, Database dbase) async {
+  //dbase = await getDataBaseHandle();
 
   await dbase.rawUpdate(
       'UPDATE boards SET show = ? WHERE symbol = ?', ["false", symbol]);

@@ -13,45 +13,44 @@ class SetupBoardsScreenState extends State<SetupBoardsScreen> {
   SetupBoardsModel boardModel = new SetupBoardsModel();
   List<BoardData> boardList;
 
-  SetupBoardsScreenState() {
-    _setBoardList();
-  }
-
-  void _setBoardList() async {
-    this.boardList = await boardModel.getList();
-  }
-
   @override
   Widget build(BuildContext context) {
-    List<ListTile> tileList = new List<ListTile>();
-
-    for (BoardData bd in boardList) {
-      String symbol = bd.symbol;
-      String name = bd.name;
-      ListTile tile = new ListTile(
-        key: ValueKey(symbol),
-        title: Text("/$symbol/ - $name"),
-      );
-      tileList.add(tile);
-    }
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Setup Boards"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () {
-              boardModel.saveToDataBase();
-            },
-          ),
-        ],
-      ),
-      body: ReorderableListView(
-        children: [...?tileList],
-        onReorder: (oldIndex, newIndex) {
-          boardModel.updateList(oldIndex, newIndex);
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: Text("Setup Boards"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.save),
+              onPressed: () {
+                boardModel.saveToDataBase();
+              },
+            ),
+          ],
+        ),
+        body: FutureBuilder<List<BoardData>>(
+          future: boardModel.getList(),
+          builder: (context, snapshot) {
+            List<ListTile> tileList = new List<ListTile>();
+            if (snapshot.hasData) {
+              for (BoardData bd in snapshot.data) {
+                String symbol = bd.symbol;
+                String name = bd.name;
+                ListTile tile = new ListTile(
+                  key: ValueKey(symbol),
+                  title: Text("/$symbol/ - $name"),
+                );
+                tileList.add(tile);
+              }
+              return ReorderableListView(
+                children: [...?tileList],
+                onReorder: (oldIndex, newIndex) {
+                  boardModel.updateList(oldIndex, newIndex);
+                },
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ));
   }
 }

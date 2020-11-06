@@ -11,7 +11,6 @@ class SetupBoardsScreen extends StatefulWidget {
 
 class SetupBoardsScreenState extends State<SetupBoardsScreen> {
   SetupBoardsModel boardModel = new SetupBoardsModel();
-  List<BoardData> boardList;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +30,20 @@ class SetupBoardsScreenState extends State<SetupBoardsScreen> {
           future: boardModel.getList(),
           builder: (context, snapshot) {
             List<ListTile> tileList = new List<ListTile>();
-            if (snapshot.hasData) {
+            print("INSIDE THE BUILDER FUNCTION");
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              print("CONNECTION WAITING");
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasError) {
+              return Text(snapshot.error);
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
               for (BoardData bd in snapshot.data) {
                 String symbol = bd.symbol;
                 String name = bd.name;
+                print("INSIDE THE FOR LOOP OF BOARDMODEL SNAPSHOT");
                 ListTile tile = new ListTile(
                   key: ValueKey(symbol),
                   title: Text("/$symbol/ - $name"),
@@ -47,9 +56,8 @@ class SetupBoardsScreenState extends State<SetupBoardsScreen> {
                   boardModel.updateList(oldIndex, newIndex);
                 },
               );
-            } else {
-              return Center(child: CircularProgressIndicator());
             }
+            return Center(child: Text("No Data"));
           },
         ));
   }

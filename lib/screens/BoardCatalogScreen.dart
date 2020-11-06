@@ -21,7 +21,7 @@ class BoardCatalogScreen extends StatelessWidget {
           return Scaffold(
               key: scaffoldState,
               appBar: AppBar(
-                title: Text('TESTING'), //ShowDropDownBoardList(),
+                title: ShowDropDownBoardList(),
                 centerTitle: true,
                 actions: <Widget>[
                   /*  IconButton(icon: Icon(Icons.search),
@@ -183,41 +183,47 @@ class ShowOPComment extends StatelessWidget {
   }
 }
 
-/*
 class ShowDropDownBoardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<BoardData> boardList =
-        Provider.of<BoardThreadsModel>(context).boardList;
-    List<DropdownMenuItem<String>> menuList =
-        new List<DropdownMenuItem<String>>();
-    print('THE VALUE OF BOARD LIST IS $boardList');
-    for (int i = 0; i < boardList.length; i++) {
-      String boardDesc = boardList[i].name;
-      String bs = boardList[i].symbol;
+    return FutureBuilder<List<BoardData>>(
+      future: Provider.of<BoardThreadsModel>(context).boardList,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          print(snapshot.error);
+        }
+        if (snapshot.hasData) {
+          List<DropdownMenuItem<String>> menuList =
+              new List<DropdownMenuItem<String>>();
+          for (BoardData bd in snapshot.data) {
+            String boardDesc = bd.name;
+            String bs = bd.symbol;
 
-      menuList.add(DropdownMenuItem<String>(
-          value: bs,
-          child: Container(
-            child: Text(
-              "/$bs/ - $boardDesc",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-            width: double.infinity,
-          )));
-    }
-
-    return Consumer<BoardThreadsModel>(builder: (context, board, child) {
-      return DropdownButton<String>(
-        isExpanded: true,
-        value: board.boardSymbol,
-        items: menuList,
-        onChanged: (newVal) {
-          board.setBoard(newVal);
-        },
-      );
-    });
+            menuList.add(DropdownMenuItem<String>(
+                value: bs,
+                child: Container(
+                  child: Text(
+                    "/$bs/ - $boardDesc",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  width: double.infinity,
+                )));
+          }
+          return Consumer<BoardThreadsModel>(builder: (context, board, child) {
+            return DropdownButton<String>(
+              isExpanded: true,
+              value: board.boardSymbol,
+              items: menuList,
+              onChanged: (newVal) {
+                board.setBoard(newVal);
+              },
+            );
+          });
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 }
-*/

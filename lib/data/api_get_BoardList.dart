@@ -3,10 +3,18 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-Future<List<Map<String, dynamic>>> getBoardsList() async {
-  Map<String, dynamic> boardsMap = await fetchJson();
+/*main() async {
+  final Future<List<Map<String, dynamic>>> boards = getBoardsList();
+  List<Map<String, dynamic>> listMap = await boards;
 
-  List<Map<String, dynamic>> boardList = boardsMap['boards'];
+  print ('the list is $listMap');
+}*/
+
+
+Future<List<Map<String, dynamic>>> getBoardsList() async {
+  var boardsMap = await fetchJson();
+
+  List<Map<String, dynamic>> boardList = List<Map<String, dynamic>>.from(boardsMap['boards']);
 
   return boardList;
 }

@@ -36,14 +36,15 @@ class DisplayAttachScreenState extends State<DisplayAttachScreen> {
           appBar: AppBar(
             title: Text('your picture'),
           ),
-          body: GestureDetector(
+          body: InteractiveViewer(
+              child: GestureDetector(
             child: Container(
               child: Center(child: getFullImage(link)),
             ),
             onTap: () {
               Navigator.of(context).pop();
             },
-          ));
+          )));
     }
   }
 }
@@ -73,18 +74,20 @@ class _VideoWidgetState extends State<VideoWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-        child: Center(
-          child: _controller.value.initialized
-              ? AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                )
-              : Container(),
+      body: InteractiveViewer(
+        child: GestureDetector(
+          child: Center(
+            child: _controller.value.initialized
+                ? AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  )
+                : Container(),
+          ),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
         ),
-        onTap: () {
-          Navigator.of(context).pop();
-        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

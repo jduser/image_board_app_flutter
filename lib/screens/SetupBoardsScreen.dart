@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:anon4_board/storage/boards_table.dart';
 import 'package:anon4_board/models/SetupBoardsModel.dart';
+import 'package:anon4_board/models/BoardThreadsModel.dart';
 
 class SetupBoardsScreen extends StatefulWidget {
   static const String routeName = 'SetupBoardsScreen';
@@ -26,8 +27,12 @@ class SetupBoardsScreenState extends State<SetupBoardsScreen> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.save),
-              onPressed: () {
-                boardModel.saveToDataBase();
+              onPressed: () async {
+                await boardModel.saveToDataBase();
+                BoardThreadsModel btm =
+                    ModalRoute.of(context).settings.arguments;
+                await btm.resetBoardsList();
+                setState(() {});
               },
             ),
           ],
@@ -50,6 +55,7 @@ class SetupBoardsScreenState extends State<SetupBoardsScreen> {
                 children: [...?tileList],
                 onReorder: (oldIndex, newIndex) {
                   boardModel.updateList(oldIndex, newIndex);
+                  setState(() {});
                 },
               );
             } else {

@@ -10,7 +10,7 @@ class BoardThreadsModel extends ChangeNotifier {
     _setBoardsList();
   }
 
-  void _setBoardsList() async {
+  Future<void> _setBoardsList() async {
     List<BoardData> bList;
     bList = await this.boardsList;
     this.setBoard(bList[0].symbol);
@@ -19,6 +19,13 @@ class BoardThreadsModel extends ChangeNotifier {
   void setBoard(String symbol) {
     this.boardSymbol = symbol;
     notifyListeners();
+  }
+
+  Future<void> resetBoardsList() async {
+    this.boardsList = getBoardDataList();
+    List<BoardData> bList;
+    bList = await this.boardsList;
+    this.setBoard(bList[0].symbol);
   }
 
   Future<List<OPThread>> getBoardCatalog(String newBoard) async {

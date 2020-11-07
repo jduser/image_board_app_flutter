@@ -49,7 +49,8 @@ class BoardCatalogScreen extends StatelessWidget {
                   GestureDetector(
                     child: ListTile(title: Text('Setup Boards')),
                     onTap: () {
-                      Navigator.pushNamed(context, SetupBoardsScreen.routeName);
+                      Navigator.pushNamed(context, SetupBoardsScreen.routeName,
+                          arguments: board);
                     },
                   ),
                   ListTile(title: Text('Bookmarks'))

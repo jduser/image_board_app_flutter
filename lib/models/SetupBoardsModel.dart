@@ -17,6 +17,7 @@ class SetupBoardsModel {
     BoardData tempData = dataList[oldIndex];
     dataList.removeAt(oldIndex);
     dataList.insert(newIndex, tempData);
+    //return dataList;
   }
 
   Future<void> saveToDataBase() async {

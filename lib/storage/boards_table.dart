@@ -42,9 +42,8 @@ Future<void> insertBoardTable() async {
 
 Future<void> refillBoardTableData(List<BoardData> bDataList) async {
   Database dbase = await db;
-
   await dbase.rawDelete('DELETE from boards');
-  List<Map<String, String>> maps;
+  List<Map<String, String>> maps = new List();
   for (BoardData bd in bDataList) {
     maps.add(bd.toMap());
   }
